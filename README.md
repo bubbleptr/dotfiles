@@ -24,18 +24,15 @@ chezmoi init --apply git@github.com:BubblePtr/dotfiles.git
 
 - 装 AUR 字体（Ioskeley / Sarasa）和 Chrome
 - clone Ghostty，并在 Linux 上把 `local.conf` 链到 `omarchy.conf`
-- 把 `statusLine` 一段合并进 `~/.claude/settings.json`（需要 `jq`，以及 `bun` 或 `node` 之一；其余 key 原样保留）
 
 ## 只同步一部分
 
 `apply` / `diff` / `status` 都接受目标路径，只处理点名的那部分，其余条目原样不动：
 
 ```bash
-chezmoi diff  ~/.claude      # 先看
-chezmoi apply ~/.claude      # 只应用 Claude Code 状态栏
+chezmoi diff  ~/.config/hypr      # 先看
+chezmoi apply ~/.config/hypr      # 只应用 Hyprland 配置
 ```
-
-目录级 apply 会连带执行该目录内的 `run_` 脚本（`dot_claude/run_onchange_after_wire-statusline.sh.tmpl`），但不会碰 `clone-ghostty` / `linux-aur-packages` 这些根目录脚本。
 
 `.chezmoiignore` 已内置 OS 守卫（模板会被求值）：
 
@@ -47,7 +44,7 @@ linux-aur-packages.sh
 {{ end }}
 ```
 
-也就是**非 Linux 机器上只管 `~/.claude`**，`.config/**` 和 `clone-ghostty` / `linux-aur-packages` 两个根脚本一律忽略。所以在 macOS 上直接 `chezmoi update` / `chezmoi apply` 是安全的，不会把 Hyprland / fcitx5 那套写进 `~/.config`。
+也就是**非 Linux 机器上什么都不写**，`.config/**` 和 `clone-ghostty` / `linux-aur-packages` 两个根脚本一律忽略。所以在 macOS 上直接 `chezmoi update` / `chezmoi apply` 是安全的，不会把 Hyprland / fcitx5 那套写进 `~/.config`。
 
 Linux 上守卫不生效（条件为假），全量 apply 行为不变；想在某台机器上再收窄，继续往 `.chezmoiignore` 里加条件即可。
 
@@ -98,7 +95,7 @@ chezmoi diff
 | `omarchy/shell.toml`、`defaults/agent` | 16MB 壁纸 |
 | `mise/config.toml` | Rime 词库 |
 | `starship.toml`（plain-text-symbols + `command_timeout`） | Codex 专用 `starship-codex.toml` |
-| `.claude/statusline.mjs`（Claude Code 状态栏） | 整份 `~/.claude/settings.json`（只合并 `statusLine` 一个 key） |
+| | `~/.claude`（CLAUDE.md、settings、状态栏归 [harness](https://github.com/bubbleptr/harness) 仓库） |
 | fcitx5 的 profile / 快捷键 | 整份 `~/.config` |
 | AUR 包列表 | |
 
